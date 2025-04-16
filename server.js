@@ -7,8 +7,21 @@ app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, // From Railway
-  ssl: { rejectUnauthorized: false }
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+
+// 🧪 TEST CONNECTION ROUTE
+app.get('/test-db', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    res.send(`🎉 Connected! PostgreSQL time: ${result.rows[0].now}`);
+  } catch (err) {
+    console.error('Database connection failed:', err);
+    res.status(500).send('❌ Database connection failed.');
+  }
 });
 
 // 🚀 POST /leads
@@ -27,7 +40,7 @@ app.post('/leads', async (req, res) => {
   }
 });
 
-// 🧠 GET /leads
+// 📥 GET /leads
 app.get('/leads', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM leads ORDER BY id DESC');
@@ -38,5 +51,6 @@ app.get('/leads', async (req, res) => {
   }
 });
 
+// 🟢 Launch Server
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
