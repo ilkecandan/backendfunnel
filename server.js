@@ -6,8 +6,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// 🛠️ Hardcoded PostgreSQL connection for testing
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  user: 'postgres',
+  host: 'shortline.proxy.rlwy.net',
+  database: 'railway',
+  password: 'CxDQnwfswRkBomkFMvLtooyIfVYGfbnA',
+  port: 28698,
   ssl: {
     rejectUnauthorized: false,
   },
